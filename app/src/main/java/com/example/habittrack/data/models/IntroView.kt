@@ -1,4 +1,4 @@
 package com.example.habittrack.data.models
 
-class IntroView(val description: String, val image: Int) {
+data class IntroView(val description: String, val image: Int) {
 }

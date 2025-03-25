@@ -28,10 +28,19 @@ fun CalculateTimeInBetween(startDate: String): String{
         return when{
             minutes<240 -> "Starts in $minutes minutes"
             hours<48 -> "Starts in $hours hours"
+            days<61 -> "Starts in $days days"
+            months<24 -> "Starts in $months months"
+            else->"Starts in $years years"
         }
     }
+    return when{
+        minutes<240 -> "$minutes minutes ago"
+        hours<48 -> "$hours hours ago"
+        days<61 -> "$days days ago"
+        months<24 -> "$months months ago"
+        else->"$years years ago"
+    }
 
-}
 
 object Calculation {
     private fun timeStampToString(timeStamp: Long): String{

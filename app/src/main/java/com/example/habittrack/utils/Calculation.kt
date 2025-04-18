@@ -1,12 +1,12 @@
-package com.example.habittrack.utils
+package com.example.habittrack.logic.utils
 
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-fun CalculateTimeInBetween(startDate: String): String {
-    val endDate: String = Calculation.timeStampToString(System.currentTimeMillis()) // Fixed reference
+fun calculateTimeInBetween(startDate: String): String {
+    val endDate: String = Calculations.timeStampToString(System.currentTimeMillis())
     val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
 
     val date1 = sdf.parse(startDate) ?: return "Invalid Start Date"
@@ -15,15 +15,13 @@ fun CalculateTimeInBetween(startDate: String): String {
     var difference: Long = date2.time - date1.time
     val isNegative = difference < 0
 
-    if (isNegative) {
-        difference = -difference
-    }
+    if (isNegative) difference = -difference
 
     val minutes = difference / (60 * 1000)
     val hours = difference / (60 * 60 * 1000)
     val days = difference / (24 * 60 * 60 * 1000)
-    val months = difference / (30L * 24 * 60 * 60 * 1000)  // Approximate month
-    val years = difference / (365L * 24 * 60 * 60 * 1000)  // Approximate year
+    val months = difference / (30L * 24 * 60 * 60 * 1000)
+    val years = difference / (365L * 24 * 60 * 60 * 1000)
 
     return if (isNegative) {
         when {
@@ -44,16 +42,16 @@ fun CalculateTimeInBetween(startDate: String): String {
     }
 }
 
-object Calculation {
+object Calculations {
     fun timeStampToString(timeStamp: Long): String {
         val stamp = Timestamp(timeStamp)
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
         return sdf.format(Date(stamp.time))
     }
 
-    fun CleanDate(_day: Int, _month: Int, _year: Int): String {
+    fun cleanDate(_day: Int, _month: Int, _year: Int): String {
         val day = if (_day < 10) "0$_day" else _day.toString()
-        val month = if (_month < 9) "0${_month + 1}" else (_month + 1).toString() // Adjusting for zero-based months
+        val month = if (_month < 9) "0${_month + 1}" else (_month + 1).toString()
         return "$day/$month/$_year"
     }
 

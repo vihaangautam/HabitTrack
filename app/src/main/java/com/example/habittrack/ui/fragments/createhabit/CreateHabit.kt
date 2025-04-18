@@ -17,4 +17,19 @@ class CreateHabit : Fragment(R.layout.fragment_create_habit) {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    private var title = ""
+    private var description = ""
+    private var drawableSelected = 0
+    private var timeStamp = ""
+
+    private lateinit var habitViewModel: HabitViewModel
+
+    private var day = 0
+    private var month = 0
+    private var year = 0
+    private var hour = 0
+    private var minute = 0
+
+    private var cleanDate = ""
+    private var cleanTime = ""
 }

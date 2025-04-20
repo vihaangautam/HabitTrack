@@ -7,11 +7,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.habittrack.data.models.Habit
 import com.example.habittrack.logic.dao.HabitDao
-
 @Database(entities = [Habit::class], version = 1, exportSchema = false)
 abstract class HabitDatabase : RoomDatabase() {
-    abstract fun habitdao(): HabitDao
-    abstract fun habitDao(): HabitDao
+    abstract fun habitDao(): HabitDao  // ✅ only this method
 
     companion object {
         @Volatile
@@ -33,8 +31,3 @@ abstract class HabitDatabase : RoomDatabase() {
         }
     }
 }
-
-
-
-
-

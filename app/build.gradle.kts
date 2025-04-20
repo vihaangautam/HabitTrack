@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.habittrack"
-        minSdk = 23
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -79,7 +79,7 @@ dependencies {
 
     // ViewPager2 & Circle Indicator
     implementation("androidx.viewpager2:viewpager2:1.0.0")
-    implementation("me.relex:circleindicator:2.1.4")
+    implementation("me.relex:circleindicator:2.1.6")
 
     // Testing
     testImplementation("junit:junit:4.13.2")

@@ -34,5 +34,8 @@
         <action
             android:id="@+id/action_updateHabit_to_habitList"
             app:destination="@id/habitList" />
+        <argument
+            android:name="selectedHabit"
+            app:argType="com.example.habittrack.data.models.Habit" />
     </fragment>
 </navigation>

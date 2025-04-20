@@ -4,9 +4,8 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
@@ -19,16 +18,22 @@ import com.example.habittrack.data.models.Habit
 import com.example.habittrack.databinding.FragmentCreateHabitBinding
 import com.example.habittrack.logic.utils.Calculations
 import com.example.habittrack.ui.viewmodels.HabitViewModel
+
+
 import java.util.*
 
-class CreateHabit : Fragment(), TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+class CreateHabitFragment : Fragment(R.layout.fragment_create_habit),
+    TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
-    private lateinit var binding: FragmentCreateHabitBinding
+    private var _binding: FragmentCreateHabitBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var habitViewModel: HabitViewModel
 
+    private var title = ""
+    private var description = ""
     private var drawableSelected = 0
-    private var cleanDate = ""
-    private var cleanTime = ""
+    private var timeStamp = ""
 
     private var day = 0
     private var month = 0
@@ -36,18 +41,14 @@ class CreateHabit : Fragment(), TimePickerDialog.OnTimeSetListener, DatePickerDi
     private var hour = 0
     private var minute = 0
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentCreateHabitBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    private var cleanDate = ""
+    private var cleanTime = ""
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        _binding = FragmentCreateHabitBinding.bind(view)
         habitViewModel = ViewModelProvider(this)[HabitViewModel::class.java]
 
         binding.btnConfirm.setOnClickListener {
@@ -72,16 +73,15 @@ class CreateHabit : Fragment(), TimePickerDialog.OnTimeSetListener, DatePickerDi
     }
 
     private fun addHabitToDB() {
-        val title = binding.etHabitTitle.text.toString()
-        val description = binding.etHabitDescription.text.toString()
-        val timeStamp = "$cleanDate $cleanTime"
+        title = binding.etHabitTitle.text.toString().trim()
+        description = binding.etHabitDescription.text.toString().trim()
+        timeStamp = "$cleanDate $cleanTime"
 
-        if (title.isNotEmpty() && description.isNotEmpty() && drawableSelected != 0) {
+        if (title.isNotEmpty() && description.isNotEmpty() && timeStamp.isNotEmpty() && drawableSelected != 0) {
             val habit = Habit(0, title, description, timeStamp, drawableSelected)
-            habitViewModel.addHabit(habit)
-
+            habitViewModel.insertHabit(habit)
             Toast.makeText(context, "Habit created successfully!", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_createHabit_to_habitListFragment)
+            findNavController().navigate(R.id.action_createHabit_to_habitList)
         } else {
             Toast.makeText(context, "Please fill all the fields", Toast.LENGTH_SHORT).show()
         }
@@ -89,35 +89,36 @@ class CreateHabit : Fragment(), TimePickerDialog.OnTimeSetListener, DatePickerDi
 
     private fun drawableSelected() {
         binding.ivFastFoodSelected.setOnClickListener {
+            binding.ivFastFoodSelected.isSelected = true
+            binding.ivSmokingSelected.isSelected = false
+            binding.ivTeaSelected.isSelected = false
             drawableSelected = R.drawable.baseline_fastfood_24
-            selectDrawable(binding.ivFastFoodSelected)
         }
 
         binding.ivSmokingSelected.setOnClickListener {
+            binding.ivFastFoodSelected.isSelected = false
+            binding.ivSmokingSelected.isSelected = true
+            binding.ivTeaSelected.isSelected = false
             drawableSelected = R.drawable.baseline_smoke_free_24
-            selectDrawable(binding.ivSmokingSelected)
         }
 
         binding.ivTeaSelected.setOnClickListener {
+            binding.ivFastFoodSelected.isSelected = false
+            binding.ivSmokingSelected.isSelected = false
+            binding.ivTeaSelected.isSelected = true
             drawableSelected = R.drawable.baseline_no_drinks_24
-            selectDrawable(binding.ivTeaSelected)
         }
     }
 
-    private fun selectDrawable(selectedView: View) {
-        binding.ivFastFoodSelected.isSelected = selectedView == binding.ivFastFoodSelected
-        binding.ivSmokingSelected.isSelected = selectedView == binding.ivSmokingSelected
-        binding.ivTeaSelected.isSelected = selectedView == binding.ivTeaSelected
-    }
-
-    override fun onDateSet(view: DatePicker?, yearX: Int, monthX: Int, dayX: Int) {
-        cleanDate = Calculations.cleanDate(dayX, monthX, yearX)
-        binding.tvDateSelected.text = "Date: $cleanDate"
-    }
-
-    override fun onTimeSet(view: TimePicker?, hourX: Int, minuteX: Int) {
-        cleanTime = Calculations.cleanTime(hourX, minuteX)
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minuteOfDay: Int) {
+        Log.d("CreateHabitFragment", "Time: $hourOfDay:$minuteOfDay")
+        cleanTime = Calculations.cleanTime(hourOfDay, minuteOfDay)
         binding.tvTimeSelected.text = "Time: $cleanTime"
+    }
+
+    override fun onDateSet(view: DatePicker?, yearPicked: Int, monthPicked: Int, dayPicked: Int) {
+        cleanDate = Calculations.cleanDate(dayPicked, monthPicked, yearPicked)
+        binding.tvDateSelected.text = "Date: $cleanDate"
     }
 
     private fun getTimeCalendar() {
@@ -131,5 +132,10 @@ class CreateHabit : Fragment(), TimePickerDialog.OnTimeSetListener, DatePickerDi
         day = cal.get(Calendar.DAY_OF_MONTH)
         month = cal.get(Calendar.MONTH)
         year = cal.get(Calendar.YEAR)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

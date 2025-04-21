@@ -9,7 +9,7 @@
         android:id="@+id/habitList"
         android:name="com.example.habittrack.ui.fragments.habitlist.HabitList"
         android:label="Habits"
-        tools:layout="@layout/fragment_habit_list" >
+        tools:layout="@layout/fragment_habit_list">
         <action
             android:id="@+id/action_habitList_to_createHabit"
             app:destination="@id/createHabit" />
@@ -17,25 +17,28 @@
             android:id="@+id/action_habitList_to_updateHabit"
             app:destination="@id/updateHabit" />
     </fragment>
+
     <fragment
         android:id="@+id/createHabit"
         android:name="com.example.habittrack.ui.fragments.createhabit.CreateHabit"
         android:label="Create habit"
-        tools:layout="@layout/fragment_create_habit" >
+        tools:layout="@layout/fragment_create_habit">
         <action
             android:id="@+id/action_createHabit_to_habitList"
             app:destination="@id/habitList" />
     </fragment>
+
     <fragment
         android:id="@+id/updateHabit"
         android:name="com.example.habittrack.ui.fragments.updatelist.UpdateHabit"
         android:label="Update habit"
-        tools:layout="@layout/fragment_update_habit" >
+        tools:layout="@layout/fragment_update_habit">
         <action
             android:id="@+id/action_updateHabit_to_habitList"
             app:destination="@id/habitList" />
         <argument
-            android:name="selectedHabit"
-            app:argType="com.example.habittrack.data.models.Habit" />
+            android:name="habitId"
+            app:argType="integer" />
     </fragment>
+
 </navigation>

@@ -18,11 +18,11 @@ class MainActivity : AppCompatActivity() {
         //Checks whether it's the users first time
         loadData()
 
-        setupActionBarWithNavController(findNavController(R.id.navHostFragment))
+        setupActionBarWithNavController(findNavController(R.id.nav_host_fragment))
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.navHostFragment)
+        val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 

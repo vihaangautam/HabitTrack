@@ -22,7 +22,7 @@ import com.example.habittrack.ui.viewmodels.HabitViewModel
 
 import java.util.*
 
-class CreateHabitFragment : Fragment(R.layout.fragment_create_habit),
+class CreateHabit: Fragment(R.layout.fragment_create_habit),
     TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
     private var _binding: FragmentCreateHabitBinding? = null
